@@ -4,8 +4,38 @@ var router = express.Router();
 //models
 const Movie=require('../models/Movie');
 
+//get metodu
+//http://localhost:3000/api/movie/getir
+//api si ile postman den vt den veri alınır.
+router.get('/getir',(req,res)=>{
+	const promise=Movie.find({ });
+	promise.then((data)=>{
+		res.json(data);
+	}).catch((err)=>{
+		res.json(err);
+	});
+});
+
+//id bazlı veri çekme
+// örneğin sonuna http://localhost:3000/api/movie/5bfd8462c2264117d46d2566 id sini yazarak bu id li datayı çekebilirsin.
+router.get('/:movie_id', (req,res,next)=>{
+
+	const promise=Movie.findById(req.params.movie_id);
+	promise.then((data)=>{
+		//if bloğu hatalı id girildiğinde dönülcek olan hata mesajı içindir.
+		//code kısmı kendin belirleyebilirsin.
+		if(!data)
+			next({message:'The movie was not found.', code:99});
+		res.json(data);
+	}).catch((err)=>{
+		res.json(err);
+	});
+});
+
 /* insert */
-router.post('/', (req, res, next) => {
+//http://localhost:3000/api/movie/ekle 
+//api si ile postman den ekleme yapılır.
+router.post('/ekle', (req, res, next) => {
 	
 	/*const {title,imdb_score,category,country,year}=req.body;
 	 	const movie=new Movie({
@@ -38,7 +68,7 @@ router.post('/', (req, res, next) => {
   		res.json({status:1});
   	}).catch((err)=>{
   		res.json(err);
-  	})
+  		});
 
 });
 

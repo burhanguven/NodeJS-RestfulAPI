@@ -39,7 +39,8 @@ app.use((err, req, res, next) => {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  //var olan hata mesajını kendimize göre uyarlıyoruz.
+  res.json({error: {message: err.message, code: err.code}});
 });
 
 module.exports = app;
