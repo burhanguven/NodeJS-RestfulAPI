@@ -32,6 +32,26 @@ router.get('/:movie_id', (req,res,next)=>{
 	});
 });
 
+//update
+
+router.put('/:movie_id', (req,res,next)=>{
+
+	const promise=Movie.findByIdAndUpdate(
+		req.params.movie_id,
+		req.body
+	);
+
+	promise.then((data)=>{
+		//if bloğu hatalı id girildiğinde dönülcek olan hata mesajı içindir.
+		//code kısmı kendin belirleyebilirsin.
+		if(!data)
+			next({message:'The movie was not found.', code:99});
+		res.json(data);
+	}).catch((err)=>{
+		res.json(err);
+	});
+});
+
 /* insert */
 //http://localhost:3000/api/movie/ekle 
 //api si ile postman den ekleme yapılır.
@@ -65,7 +85,7 @@ router.post('/ekle', (req, res, next) => {
   	const promise=movie.save();
 
   	promise.then((data)=>{
-  		res.json({status:1});
+  		res.json(data);
   	}).catch((err)=>{
   		res.json(err);
   		});
