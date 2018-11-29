@@ -38,14 +38,34 @@ router.put('/:movie_id', (req,res,next)=>{
 
 	const promise=Movie.findByIdAndUpdate(
 		req.params.movie_id,
-		req.body
+		req.body,
+		{
+			//update işlemini yaptıktan sonra postmanden çağırdığımızda
+			//update işlemini db de yapıyor fakat postmande eski halini json olarak veriyor.
+			//bunun için aşağıdaki ifade kullanılır. 
+			new:true
+		}
 	);
-
 	promise.then((data)=>{
 		//if bloğu hatalı id girildiğinde dönülcek olan hata mesajı içindir.
 		//code kısmı kendin belirleyebilirsin.
 		if(!data)
 			next({message:'The movie was not found.', code:99});
+		res.json(data);
+	}).catch((err)=>{
+		res.json(err);
+	});
+});
+
+//delete
+//id bazlı delete işlemi
+router.delete('/:movie_id', (req,res,next)=>{
+	const promise=Movie.findByIdAndRemove(req.params.movie_id);
+
+	promise.then((data)=>{
+		if(!data)
+			next({message:'The movie was not found.', code:101});
+		
 		res.json(data);
 	}).catch((err)=>{
 		res.json(err);
