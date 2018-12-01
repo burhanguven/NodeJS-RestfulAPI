@@ -24,6 +24,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
+//movie dosyasına yönlendirmek için
 app.use('/api/movie',movie);
 
 // catch 404 and forward to error handler
@@ -40,6 +41,7 @@ app.use((err, req, res, next) => {
   // render the error page
   res.status(err.status || 500);
   //var olan hata mesajını kendimize göre uyarlıyoruz.
+  //movie.js dosyasında bağlantı kullanılıyor.
   res.json({error: {message: err.message, code: err.code}});
 });
 
