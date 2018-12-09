@@ -1,3 +1,4 @@
+const mongoose=require('mongoose');
 const express = require('express');
 const router = express.Router();
 
@@ -57,14 +58,16 @@ router.get('/getir', (req,res)=>{
 
 //yönetmenlerin çektiği filmleri listeleme
 //bir yönetmenin 1 den fazla filmi varsa onu kendi adı altında listeler
-
+//bütün yönetmenleri verir
 router.get('/', (req,res)=>{
   const promise=Director.aggregate([
     {
+      //join işlemi
       $lookup:{
         from:'movies',
         localField:'_id',
         foreignField:'director_id',
+        //dönen datanın atanacağı değişken
         as:'movies'
       }
     },
@@ -105,5 +108,96 @@ router.get('/', (req,res)=>{
       });
   
 });
+
+//id ile yönetmene ulaşma
+//tek yönetmen verir
+router.get('/:director_id', (req,res)=>{
+  const promise=Director.aggregate([
+    {
+      $match:{
+        '_id':mongoose.Types.ObjectId(req.params.director_id)
+      }
+    },
+    {
+      //join işlemi
+      $lookup:{
+        from:'movies',
+        localField:'_id',
+        foreignField:'director_id',
+        //dönen datanın atanacağı değişken
+        as:'movies'
+      }
+    },
+    {
+      $unwind:{
+        path:'$movies',
+        preserveNullAndEmptyArrays:true
+      }
+    },
+    {
+      //yönetmenleri kaç filmi varsa tek bir isim altında toplmak için 
+      $group:{
+        _id:{
+          _id:'$_id',
+          name:'$name',
+          surname:'$surname',
+          bio:'$bio'
+        },
+        movies:{
+          $push:'$movies'
+        } 
+      }
+    },
+    {
+      $project:{
+        _id:'$_id._id',
+        name:'$_id.name',
+        surname:'$_id.surname',
+        movies:'$movies'
+      }
+    }
+  ]);
+
+  promise.then((data)=>{
+      res.json(data);
+    }).catch((err)=>{
+      res.json(err);
+      });
+  
+});
+
+//id bazlı update
+router.put('/:director_id', (req,res,next)=>{
+  const promise=Director.findByIdAndUpdate(
+      req.params.director_id,
+      req.body,
+      {
+        new:true
+      }
+    );
+  promise.then((data)=>{
+    if(!data)
+      next({message: 'The director was not found', code:45});
+
+    res.json(data);
+  }).catch((errr)=>{
+    res.json(err);
+  });
+});
+
+//delete
+router.delete('/:director_id', (req,res,next)=>{
+  const promise=Director.findByIdAndRemove(req.params.director_id);
+  
+  promise.then((data)=>{
+    if(!data)
+      next({message: 'The director was not found', code:45});
+
+    res.json(data);
+  }).catch((errr)=>{
+    res.json(err);
+  });
+});
+
 
 module.exports=router;
