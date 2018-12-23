@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt=require('bcryptjs');
+const jwt=require('jsonwebtoken');
 
 const User=require('../models/User');
 
@@ -25,6 +26,47 @@ router.post('/register', (req,res,next)=>{
 	})
 });
 
+//json web token
+//npm install jsonwebtoken --save
+router.post('/authenticate',(req,res,next)=>{
+	const {username,password}=req.body;
+
+	User.findOne({username},(err,data)=>{
+		if(err)
+			throw err;
+
+		//şifrelenmiş password doğru mu diye kontrol edilecek.
+		if(!data){
+			res.json({
+				status:false,
+				message:'Authenticate failed, user not found.'
+			});
+		}else{
+			bcrypt.compare(password, data.password).then((result)=>{
+				if(!result){
+					res.json({
+						status:false,
+						message:'Authenticate failed, wrong password.'
+					})
+				}else{
+					const payload={
+						username
+					};
+					const token=jwt.sign(payload, req.app.get('api_secret_key'),{
+						expiresIn:720 //12 saat
+					});
+
+					res.json({
+						status:true,
+						token
+					});
+				}
+			});
+		}
+
+	});
+
+});
 
 
 module.exports = router;

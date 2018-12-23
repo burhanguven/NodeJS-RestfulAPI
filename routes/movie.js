@@ -5,9 +5,9 @@ const router = express.Router();
 const Movie=require('../models/Movie');
 
 //get metodu
-//http://localhost:3000/api/movie/getir
+//http://localhost:3000/api/movie
 //api si ile postman den vt den veri alınır.
-router.get('/getir',(req,res)=>{
+router.get('/',(req,res)=>{
 	const promise=Movie.find({ });
 	promise.then((data)=>{
 		res.json(data);

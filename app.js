@@ -13,6 +13,14 @@ const app = express();
 //mongoDB bağlama
 const db=require('./helper/db.js')();
 
+//Config
+const config=require('./config');
+//global olarak kullanmak için atama yapılır.
+app.set('api_secret_key',config.api_secret_key);
+
+//Middleware dosyası
+const verifyToken=require('./middleware/verify-token')
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -25,10 +33,13 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
+//api altındaki her türlü endpoint için geçerli
+app.use('/api',verifyToken);
 //movie dosyasına yönlendirmek için
 app.use('/api/movie',movie);
 //director dosyasına erişmek için
 app.use('/api/directors',director);
+
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
