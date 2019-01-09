@@ -5,6 +5,11 @@ const jwt=require('jsonwebtoken');
 
 const User=require('../models/User');
 
+//get home page
+router.get('/', (req,res)=>{
+	res.render('index', {title: 'Express'});
+})
+
 //password db ye şifreli basmak için
 //bcrypt dependencies olarak eklemek için
 //npm install --save bcryptjs 
