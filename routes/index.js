@@ -42,13 +42,18 @@ router.post('/authenticate',(req,res,next)=>{
 				message:'Authenticate failed, user not found.'
 			});
 		}else{
+			//password servisten gelen kullanıcının girdiği 
+			//data.password db den alınan data
 			bcrypt.compare(password, data.password).then((result)=>{
+				//result=false ise 
 				if(!result){
 					res.json({
 						status:false,
 						message:'Authenticate failed, wrong password.'
 					})
+				//result=true ise token oluşturulacak.
 				}else{
+					//console.log(password);
 					const payload={
 						username
 					};
@@ -63,9 +68,7 @@ router.post('/authenticate',(req,res,next)=>{
 				}
 			});
 		}
-
 	});
-
 });
 
 
