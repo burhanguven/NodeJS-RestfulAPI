@@ -130,6 +130,20 @@ describe('/api/movie tests', ()=>{
 				})
 		})
 	});
+	//delete
+	describe('/DELETE/:movie_id movie', ()=>{
+		it('it should DELETE a movie given by id', (done)=>{
+			chai.request(server)
+				.delete('/api/movie/'+movieId)
+				.set('x-access-token',token)
+				.end((err,res)=>{
+					res.should.have.status(200);
+					res.body.should.be.a('object');
+					res.body.should.have.property('status').eql(1);
+					done();
+				})
+		})
+	})
 });
 
 //sıralama görmek için test

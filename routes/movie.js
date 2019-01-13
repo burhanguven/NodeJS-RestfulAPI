@@ -136,7 +136,7 @@ router.delete('/:movie_id', (req,res,next)=>{
 		if(!data)
 			next({message:'The movie was not found.', code:101});
 		
-		res.json(data);
+		res.json({status: 1});
 	}).catch((err)=>{
 		res.json(err);
 	});
