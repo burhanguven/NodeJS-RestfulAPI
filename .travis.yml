@@ -1,8 +1,8 @@
 language: node_js
 node_js:
-  -10.15.0
+  -8.12.0
 before_install:
-  -npm before_install
+  -npm install
   -export NODE_ENV=production
 script:
   -npm run test
