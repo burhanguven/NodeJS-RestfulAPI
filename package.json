@@ -4,8 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "start:dev": "nodemon ./bin/www",
-    "test": "./node_modules/.bin/mocha --exit --recursive"
+    "test": "mocha --exit --recursive"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
