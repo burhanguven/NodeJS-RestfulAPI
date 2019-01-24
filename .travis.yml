@@ -3,6 +3,7 @@ node_js:
   - 8.12.0
 before_install:
   - npm install
+  - npm mocha 
   - export NODE_ENV=production
 script:
   - npm run test
