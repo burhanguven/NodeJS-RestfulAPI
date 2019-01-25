@@ -2,8 +2,7 @@ language: node_js
 node_js:
   - 8.12.0
 before_install:
-  - npm i mocha
-  - npm install
+  - npm install --save-dev mocha
   - export NODE_ENV=production
 script:
   - npm install rimraf -g
