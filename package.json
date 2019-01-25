@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "test": "mocha --exit --recursive"
+    "test": "./node_modules/.bin/mocha --compilers ts:typescript-require"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
